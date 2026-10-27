@@ -10,7 +10,31 @@
 {
   "sections": {
     "main": {
-      "type": "hello-world",
+      "type": "threadline-home",
+      "blocks": {
+        "value_materials": {
+          "type": "value",
+          "settings": {
+            "heading": "Better materials",
+            "text": "Thoughtfully chosen fabrics that feel good and last longer."
+          }
+        },
+        "value_lasting": {
+          "type": "value",
+          "settings": {
+            "heading": "Made to last",
+            "text": "Timeless shapes, considered construction, and no disposable trends."
+          }
+        },
+        "value_easy": {
+          "type": "value",
+          "settings": {
+            "heading": "Easy by design",
+            "text": "Versatile pieces that work harder across your everyday wardrobe."
+          }
+        }
+      },
+      "block_order": ["value_materials", "value_lasting", "value_easy"],
       "settings": {}
     }
   },

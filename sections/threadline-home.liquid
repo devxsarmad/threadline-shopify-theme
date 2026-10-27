@@ -1,0 +1,169 @@
+<div class="threadline-home full-width">
+  <section class="tl-hero" style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}">
+    <div class="tl-hero__media">
+      {% if section.settings.hero_image != blank %}
+        {{ section.settings.hero_image | image_url: width: 2400 | image_tag: widths: '750, 1100, 1500, 2000, 2400', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: section.settings.hero_image.alt }}
+      {% else %}{{ 'lifestyle-1' | placeholder_svg_tag }}{% endif %}
+    </div>
+    <div class="tl-hero__content tl-hero__content--{{ section.settings.content_position }}">
+      <p class="tl-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h1>{{ section.settings.heading | escape }}</h1>
+      <div class="tl-hero__text">{{ section.settings.text }}</div>
+      {% if section.settings.button_label != blank %}<a class="tl-button tl-button--light" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label | escape }} <span aria-hidden="true">→</span></a>{% endif %}
+    </div>
+    <p class="tl-hero__scroll">Scroll to discover</p>
+  </section>
+
+  <section class="tl-intro">
+    <p class="tl-eyebrow">{{ section.settings.intro_eyebrow | escape }}</p>
+    <h2>{{ section.settings.intro_heading | escape }}</h2>
+    <p>{{ section.settings.intro_text | escape }}</p>
+  </section>
+    <p>kajaskjdlkasjdlkajsklj</p>
+
+  <section class="tl-products">
+    <div class="tl-section-head"><div><p class="tl-eyebrow">Curated for you</p><h2>{{ section.settings.collection_heading | escape }}</h2></div>{% if section.settings.featured_collection != blank %}<a href="{{ section.settings.featured_collection.url }}">View all <span aria-hidden="true">↗</span></a>{% endif %}</div>
+    <div class="tl-product-grid">
+      {% if section.settings.featured_collection != blank %}
+        {% for product in section.settings.featured_collection.products limit: section.settings.products_to_show %}
+          <article class="tl-card">
+            <a class="tl-card__image" href="{{ product.url }}">
+              {% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 900 | image_tag: widths: '360, 540, 720, 900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: product.featured_image.alt | default: product.title }}{% else %}{{ 'product-1' | placeholder_svg_tag }}{% endif %}
+              {% if product.compare_at_price > product.price %}<span class="tl-card__badge">Sale</span>{% endif %}
+            </a>
+            <div class="tl-card__meta"><h3><a href="{{ product.url }}">{{ product.title | escape }}</a></h3><p>{{ product.price | money }}{% if product.compare_at_price > product.price %} <s>{{ product.compare_at_price | money }}</s>{% endif %}</p></div>
+          </article>
+        {% endfor %}
+      {% else %}
+        {% for item in (1..4) %}<article class="tl-card"><div class="tl-card__image">{{ 'product-' | append: item | placeholder_svg_tag }}</div><div class="tl-card__meta"><h3>Everyday essential</h3><p>{{ 6900 | money }}</p></div></article>{% endfor %}
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="tl-values">
+    {% for block in section.blocks %}
+      <article {{ block.shopify_attributes }}><span>0{{ forloop.index }}</span><div><h3>{{ block.settings.heading | escape }}</h3><p>{{ block.settings.text | escape }}</p></div></article>
+    {% endfor %}
+  </section>
+
+  <section class="tl-story">
+    <div class="tl-story__media">{% if section.settings.story_image != blank %}{{ section.settings.story_image | image_url: width: 1500 | image_tag: widths: '600, 900, 1200, 1500', sizes: '(min-width: 750px) 58vw, 100vw', loading: 'lazy', alt: section.settings.story_image.alt }}{% else %}{{ 'lifestyle-2' | placeholder_svg_tag }}{% endif %}</div>
+    <div class="tl-story__content"><p class="tl-eyebrow">Inside Threadline</p><h2>{{ section.settings.story_heading | escape }}</h2><p>{{ section.settings.story_text | escape }}</p>{% if section.settings.story_button != blank %}<a class="tl-button tl-button--dark" href="{{ section.settings.story_link }}">{{ section.settings.story_button | escape }} <span aria-hidden="true">→</span></a>{% endif %}</div>
+  </section>
+
+  <section class="tl-newsletter">
+    <div><p class="tl-eyebrow">Keep in touch</p><h2>{{ section.settings.newsletter_heading | escape }}</h2><p>{{ section.settings.newsletter_text | escape }}</p></div>
+    {% form 'customer', class: 'tl-newsletter__form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <label class="visually-hidden" for="NewsletterEmail-{{ section.id }}">Email address</label>
+      <input id="NewsletterEmail-{{ section.id }}" type="email" name="contact[email]" value="{{ form.email }}" placeholder="Your email address" autocomplete="email" required>
+      <button type="submit">Join us <span aria-hidden="true">→</span></button>
+      {% if form.posted_successfully? %}<p class="tl-newsletter__message">Thank you for joining us.</p>{% endif %}
+      {% if form.errors %}<div class="tl-newsletter__message">{{ form.errors | default_errors }}</div>{% endif %}
+    {% endform %}
+  </section>
+</div>
+
+{% stylesheet %}
+  .threadline-home { --ink: #18231c; --paper: #f4efe6; --accent: #d7653b; color: var(--ink); overflow: hidden; }
+  .tl-eyebrow { font-size: .68rem; font-weight: 750; letter-spacing: .18em; text-transform: uppercase; }
+  .tl-button { align-items: center; display: inline-flex; font-size: .76rem; font-weight: 750; gap: 2.5rem; letter-spacing: .12em; padding: 1rem 1.2rem; text-decoration: none; text-transform: uppercase; transition: gap .25s ease, background .25s ease; }
+  .tl-button:hover { gap: 3rem; }
+  .tl-button--light { background: #fff; color: var(--ink); }
+  .tl-button--dark { background: var(--ink); color: #fff; }
+  .tl-hero { background: #6b766c; color: #fff; min-height: min(780px, calc(100svh - 7.5rem)); position: relative; }
+  .tl-hero__media, .tl-hero__media::after { inset: 0; position: absolute; }
+  .tl-hero__media::after { background: #000; content: ''; opacity: var(--hero-overlay); }
+  .tl-hero__media img, .tl-hero__media svg { height: 100%; object-fit: cover; width: 100%; }
+  .tl-hero__content { display: flex; flex-direction: column; justify-content: center; min-height: inherit; padding: clamp(4rem,8vw,8rem) max(var(--page-margin), calc((100vw - var(--page-width)) / 2)); position: relative; z-index: 1; }
+  .tl-hero__content--center { align-items: center; text-align: center; }
+  .tl-hero__content--right { align-items: flex-end; text-align: right; }
+  .tl-hero h1 { font-family: Georgia, serif; font-size: clamp(3.6rem,8vw,8.5rem); font-weight: 400; letter-spacing: -.05em; line-height: .87; margin: 1.1rem 0 1.5rem; max-width: 9ch; }
+  .tl-hero__text { font-size: clamp(.95rem,1.4vw,1.15rem); line-height: 1.6; margin-bottom: 2rem; max-width: 35rem; }
+  .tl-hero__scroll { bottom: 1.75rem; font-size: .65rem; left: 50%; letter-spacing: .15em; position: absolute; text-transform: uppercase; transform: translateX(-50%); z-index: 2; }
+  .tl-intro { margin: 0 auto; max-width: 62rem; padding: clamp(5rem,10vw,9rem) var(--page-margin); text-align: center; }
+  .tl-intro h2 { font-family: Georgia,serif; font-size: clamp(2.5rem,5vw,5rem); font-weight: 400; letter-spacing: -.04em; line-height: 1; margin: 1rem 0 1.5rem; }
+  .tl-intro > p:last-child { color: rgba(24,35,28,.68); line-height: 1.7; margin: auto; max-width: 40rem; }
+  .tl-products { margin: 0 auto; max-width: var(--page-width); padding: 0 var(--page-margin) clamp(5rem,10vw,9rem); }
+  .tl-section-head { align-items: end; display: flex; justify-content: space-between; margin-bottom: 2rem; }
+  .tl-section-head h2 { font-family: Georgia,serif; font-size: clamp(2.2rem,4vw,3.8rem); font-weight: 400; margin-top: .5rem; }
+  .tl-section-head > a { border-bottom: 1px solid; color: inherit; font-size: .75rem; letter-spacing: .1em; padding-bottom: .25rem; text-decoration: none; text-transform: uppercase; }
+  .tl-product-grid { display: grid; gap: clamp(.8rem,2vw,1.5rem); grid-template-columns: repeat(4,1fr); }
+  .tl-card__image { aspect-ratio: 3 / 4; background: #e7e0d4; display: block; overflow: hidden; position: relative; }
+  .tl-card__image img, .tl-card__image svg { height: 100%; object-fit: cover; transition: transform .6s ease; width: 100%; }
+  .tl-card:hover .tl-card__image img { transform: scale(1.035); }
+  .tl-card__badge { background: #fff; color: var(--ink); font-size: .65rem; left: .75rem; letter-spacing: .1em; padding: .45rem .6rem; position: absolute; text-transform: uppercase; top: .75rem; }
+  .tl-card__meta { display: flex; font-size: .85rem; gap: 1rem; justify-content: space-between; padding-top: .9rem; }
+  .tl-card__meta h3 { font-size: inherit; font-weight: 600; }
+  .tl-card__meta a { color: inherit; text-decoration: none; }
+  .tl-card__meta s { color: #888; font-size: .75rem; margin-left: .3rem; }
+  .tl-values { background: var(--paper); display: grid; grid-template-columns: repeat(3,1fr); padding: clamp(3rem,6vw,5rem) max(var(--page-margin),calc((100vw - var(--page-width))/2)); }
+  .tl-values article { display: grid; gap: 1.25rem; grid-template-columns: auto 1fr; padding: 1rem clamp(1rem,3vw,3rem); }
+  .tl-values article + article { border-left: 1px solid rgba(24,35,28,.18); }
+  .tl-values span { color: var(--accent); font-family: Georgia,serif; font-size: 1rem; }
+  .tl-values h3 { font-family: Georgia,serif; font-size: 1.35rem; font-weight: 400; margin-bottom: .5rem; }
+  .tl-values p { color: rgba(24,35,28,.65); font-size: .85rem; line-height: 1.6; }
+  .tl-story { display: grid; grid-template-columns: 58% 42%; margin: clamp(5rem,10vw,9rem) auto; max-width: var(--page-width); padding: 0 var(--page-margin); }
+  .tl-story__media { min-height: 38rem; }
+  .tl-story__media img, .tl-story__media svg { height: 100%; object-fit: cover; width: 100%; }
+  .tl-story__content { align-items: flex-start; background: var(--accent); color: #fff; display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem,6vw,6rem); }
+  .tl-story__content h2 { font-family: Georgia,serif; font-size: clamp(2.5rem,5vw,4.8rem); font-weight: 400; letter-spacing: -.04em; line-height: .95; margin: 1rem 0 1.5rem; }
+  .tl-story__content > p:not(.tl-eyebrow) { line-height: 1.7; margin-bottom: 2rem; }
+  .tl-newsletter { align-items: end; display: grid; gap: 3rem; grid-template-columns: 1fr 1fr; margin: 0 auto; max-width: var(--page-width); padding: 0 var(--page-margin); }
+  .tl-newsletter h2 { font-family: Georgia,serif; font-size: clamp(2.4rem,4vw,4rem); font-weight: 400; margin: .6rem 0 1rem; }
+  .tl-newsletter > div > p:last-child { color: rgba(24,35,28,.65); line-height: 1.6; }
+  .tl-newsletter__form { border-bottom: 1px solid; display: grid; grid-template-columns: 1fr auto; position: relative; }
+  .tl-newsletter__form input { background: transparent; border: 0; border-radius: 0; min-width: 0; outline: 0; padding: 1rem 0; }
+  .tl-newsletter__form button { background: transparent; border: 0; cursor: pointer; font-size: .75rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+  .tl-newsletter__message { bottom: -2rem; font-size: .8rem; left: 0; position: absolute; }
+  .visually-hidden { height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; clip: rect(0 0 0 0); }
+  @media (max-width: 749px) {
+    .tl-hero { min-height: 37rem; } .tl-hero h1 { font-size: clamp(3.2rem,16vw,5rem); }
+    .tl-hero__scroll { display: none; } .tl-product-grid { grid-template-columns: repeat(2,1fr); row-gap: 2rem; }
+    .tl-card__meta { display: block; } .tl-card__meta p { margin-top: .35rem; }
+    .tl-values { grid-template-columns: 1fr; } .tl-values article + article { border-left: 0; border-top: 1px solid rgba(24,35,28,.18); }
+    .tl-story { grid-template-columns: 1fr; } .tl-story__media { min-height: 28rem; } .tl-story__content { min-height: 26rem; }
+    .tl-newsletter { align-items: start; grid-template-columns: 1fr; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Threadline home",
+  "blocks": [
+    { "type": "value", "name": "Brand value", "limit": 3, "settings": [
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Better materials" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Thoughtfully chosen fabrics that feel good and last longer." }
+    ] }
+  ],
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "hero_image", "label": "Image" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 70, "step": 5, "unit": "%", "default": 25 },
+    { "type": "select", "id": "content_position", "label": "Content position", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" }], "default": "left" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New collection — 2026" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Move in your own rhythm." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Effortless essentials designed for wherever the day takes you.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the collection" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Introduction" },
+    { "type": "text", "id": "intro_eyebrow", "label": "Eyebrow", "default": "Our philosophy" },
+    { "type": "text", "id": "intro_heading", "label": "Heading", "default": "Less noise. Better clothes." },
+    { "type": "textarea", "id": "intro_text", "label": "Text", "default": "Threadline creates versatile pieces with honest materials, considered details, and a quiet confidence that outlives the season." },
+    { "type": "header", "content": "Featured products" },
+    { "type": "text", "id": "collection_heading", "label": "Heading", "default": "Everyday favorites" },
+    { "type": "collection", "id": "featured_collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 12, "step": 1, "default": 8 },
+    { "type": "header", "content": "Story" },
+    { "type": "image_picker", "id": "story_image", "label": "Image" },
+    { "type": "text", "id": "story_heading", "label": "Heading", "default": "Designed with intention." },
+    { "type": "textarea", "id": "story_text", "label": "Text", "default": "From first sketch to final stitch, we focus on purposeful design and responsible choices." },
+    { "type": "text", "id": "story_button", "label": "Button label", "default": "Our story" },
+    { "type": "url", "id": "story_link", "label": "Button link" },
+    { "type": "header", "content": "Newsletter" },
+    { "type": "text", "id": "newsletter_heading", "label": "Heading", "default": "Notes from the studio." },
+    { "type": "textarea", "id": "newsletter_text", "label": "Text", "default": "New arrivals, thoughtful stories, and the occasional good surprise." }
+  ],
+  "presets": [{ "name": "Threadline home", "blocks": [{ "type": "value", "settings": { "heading": "Better materials", "text": "Thoughtfully chosen fabrics that feel good and last longer." } }, { "type": "value", "settings": { "heading": "Made to last", "text": "Timeless shapes, considered construction, and no disposable trends." } }, { "type": "value", "settings": { "heading": "Easy by design", "text": "Versatile pieces that work harder across your everyday wardrobe." } }] }]
+}
+{% endschema %}

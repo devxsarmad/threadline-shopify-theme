@@ -76,6 +76,25 @@ body {
   font-family: var(--font-primary--family);
   background-color: var(--color-background);
   color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+a,
+button,
+input,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input {
+  color: inherit;
+}
+
+::selection {
+  background: #d7653b;
+  color: #fff;
 }
 
 /** Section layout utilities */
